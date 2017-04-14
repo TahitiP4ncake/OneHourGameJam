@@ -34,10 +34,11 @@ public class BounceController : MonoBehaviour {
     [Space]
     //gameObjects
     private Rigidbody rb;
+    public int papa;
 
     void Start () {
         manager = GamepadManager.Instance;
-        gamepad = manager.GetGamepad(1);
+        gamepad = manager.GetGamepad(papa);
         rb = GetComponent<Rigidbody>();    
     }
 	
