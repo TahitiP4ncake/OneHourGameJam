@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 135103762362526434}
   m_Layer: 0
   m_Name: Physics
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 96496279380631218}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -306,12 +306,18 @@ MonoBehaviour:
   onTheWall: 0
   dashSpeed: 25
   dashDuration: 0.2
-  dashCooldown: 1
+  dashCooldown: 0.1
   detectionRange: 1
   bounceIntensity: 10
-  gravityForce: 30
+  gravityForce: 0
   gravityTimer: 1
+  bouncePlayerForce: 4
   papa: 0
+  colorChanger: {fileID: 1405363625083884}
+  score1: 0
+  score2: 0
+  score3: 0
+  score4: 0
 --- !u!135 &135103762362526434
 SphereCollider:
   m_ObjectHideFlags: 1
