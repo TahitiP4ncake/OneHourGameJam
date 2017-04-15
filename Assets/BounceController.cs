@@ -32,17 +32,34 @@ public class BounceController : MonoBehaviour {
     public float gravityTimer;
     private bool falling;
     [Space]
+    [Header("parametres fight")]
+    public float bouncePlayerForce;
+    private bool isAttacking;
+
     //gameObjects
+    [Space]
+    [Header("parametres Player")]
     private Rigidbody rb;
+    public int papa;
+    public GameObject colorChanger;
+    public int score1;
+    public int score2;
+    public int score3;
+    public int score4;
 
     void Start () {
         manager = GamepadManager.Instance;
-        gamepad = manager.GetGamepad(1);
-        rb = GetComponent<Rigidbody>();    
-    }
-	
+        gamepad = manager.GetGamepad(papa);
+        rb = GetComponent<Rigidbody>();
 
-	void Update () {
+        //GetComponentInChildren<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+        //renderer.material.SetColor("_ToonShade",myColor);
+        colorChanger.GetComponent<Renderer>().material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
+    }
+
+
+    void Update () {
+        
         //Debug.Log(gamepad.GetStick_L().Y);
 		if(((gamepad.GetStick_L().X)>0.2f || (gamepad.GetStick_L().X) <-0.2f))
         {
@@ -140,12 +157,36 @@ public class BounceController : MonoBehaviour {
 
     void OnCollisionEnter(Collision other)
     {
-        checkCollision = true;
+        if (other.collider.tag == "Player" && !isAttacking)
+        {
+            Bounce((transform.position - other.transform.position)/bouncePlayerForce);
+            //Debug.Log("touché");
+        }
+        if (other.collider.tag == "Player" && isAttacking)
+        {
+
+            // Destroy(other.gameObject);
+            other.gameObject.tag = "Respawn";
+           
+            //other.gameObject.SetActive(false);
+
+            //Debug.Log("touché");
+        }
+        {
+            checkCollision = true;
+        }
+        
     }
 
     void OnCollisionStay(Collision other)
     {
-        checkSide = true;
+        
+        
+        if(other.collider.tag !="Player")
+        {
+            checkSide = true;
+        }
+        
     }
 
     void OnCollisionExit(Collision other)
@@ -169,7 +210,9 @@ public class BounceController : MonoBehaviour {
         Vector3 _velocity = Vector3.zero;
         //float velocityScale = 1;
         Dash();
+        isAttacking = true;
         yield return new WaitForSecondsRealtime(dashDuration);
+        isAttacking = false;
         //rb.velocity = rb.velocity / 4;
         //_velocity = rb.velocity;
         rb.velocity = rb.velocity / 4;
