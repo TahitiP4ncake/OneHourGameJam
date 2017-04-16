@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BounceController : MonoBehaviour {
     //gamepad
@@ -46,12 +47,13 @@ public class BounceController : MonoBehaviour {
     public int score2;
     public int score3;
     public int score4;
-
+    public scoreManager scoreManager;
     void Start () {
         manager = GamepadManager.Instance;
         gamepad = manager.GetGamepad(papa);
         rb = GetComponent<Rigidbody>();
-
+        scoreManager = GetComponent<scoreManager>();
+       
         //GetComponentInChildren<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
         //renderer.material.SetColor("_ToonShade",myColor);
         colorChanger.GetComponent<Renderer>().material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
@@ -66,7 +68,7 @@ public class BounceController : MonoBehaviour {
             //&& rb.velocity.x<maxSpeed
             Move();
         }
-
+        
         if(gamepad.GetButtonDown("A") && !dashOn)
         {
             dashOn = true;
@@ -76,7 +78,19 @@ public class BounceController : MonoBehaviour {
         {
             moveDown();
         }
-        
+        if(gamepad.GetButton("X"))
+        {
+            Stop();
+        }
+        if(gamepad.GetButton("Start"))
+        {
+            Scene scene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(scene.name);
+        }
+        if(gamepad.GetButtonDown("Y"))
+        {
+            colorChanger.GetComponent<Renderer>().material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
+        }
 	}
 
     void FixedUpdate()
@@ -143,6 +157,10 @@ public class BounceController : MonoBehaviour {
         rb.AddForce(Vector3.right * speed * gamepad.GetStick_L().X, ForceMode.Acceleration);
     }
     
+    void Stop()
+    {
+        rb.velocity = rb.velocity / 10;
+    }
     void moveDown()
     {
         rb.AddForce(Vector3.up * gamepad.GetStick_L().Y * downSpeed , ForceMode.Acceleration);
@@ -167,6 +185,7 @@ public class BounceController : MonoBehaviour {
 
             // Destroy(other.gameObject);
             other.gameObject.tag = "Respawn";
+            AddPoint();
            
             //other.gameObject.SetActive(false);
 
@@ -203,6 +222,26 @@ public class BounceController : MonoBehaviour {
         
         rb.AddForce(new Vector3(gamepad.GetStick_L().X, gamepad.GetStick_L().Y, 0) * dashSpeed, ForceMode.VelocityChange);
         
+    }
+
+    void AddPoint()
+    {
+        if (papa == 1)
+        {
+            scoreManager.score1 += 1;
+        }
+        if (papa == 2)
+        {
+            scoreManager.score2 += 1;
+        }
+        if (papa == 3)
+        {
+            scoreManager.score3 += 1;
+        }
+        if (papa == 4)
+        {
+            scoreManager.score4 += 1;
+        }
     }
 
     IEnumerator DashTimer()

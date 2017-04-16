@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.99264705, g: 0.5036224, b: 0.7160951, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -36,13 +36,13 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 514187031}
   m_IndirectSpecularColor: {r: 0.46169513, g: 0.5124164, b: 0.58993304, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 7
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -71,7 +71,8 @@ LightmapSettings:
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000005, guid: 3adb00082a05dee4f9372a4c11ff879d,
+    type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
 NavMeshSettings:
@@ -486,6 +487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d8b8543598c61b4984bba2974e0e1fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberOfPlayer: 0
   playerObject: {fileID: 1210911155511950, guid: 4de46960324ab0a4bb4bc56b9ea1ea69,
     type: 2}
 --- !u!4 &833589326
@@ -771,7 +773,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: e9ba2083ad114a07d000fbfb8d76c639, type: 3}
-  blurAmount: 0.537
+  blurAmount: 0.92
   extraBlur: 1
 --- !u!1 &1182405312
 GameObject:
@@ -837,7 +839,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1378184047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1356,22 +1358,22 @@ Prefab:
     - target: {fileID: 224372325329323090, guid: e7e11cb39c8515c4290251b63df9fa63,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 303.83
       objectReference: {fileID: 0}
     - target: {fileID: 224372325329323090, guid: e7e11cb39c8515c4290251b63df9fa63,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 393.52
       objectReference: {fileID: 0}
     - target: {fileID: 224372325329323090, guid: e7e11cb39c8515c4290251b63df9fa63,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0.000030517578
+      value: 362
       objectReference: {fileID: 0}
     - target: {fileID: 224372325329323090, guid: e7e11cb39c8515c4290251b63df9fa63,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 13.046
       objectReference: {fileID: 0}
     - target: {fileID: 224372325329323090, guid: e7e11cb39c8515c4290251b63df9fa63,
         type: 2}
@@ -1403,6 +1405,21 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.50000006
       objectReference: {fileID: 0}
+    - target: {fileID: 114546928696833536, guid: e7e11cb39c8515c4290251b63df9fa63,
+        type: 2}
+      propertyPath: m_FontData.m_Alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114757625242369414, guid: e7e11cb39c8515c4290251b63df9fa63,
+        type: 2}
+      propertyPath: creator
+      value: 
+      objectReference: {fileID: 833589325}
+    - target: {fileID: 114757625242369414, guid: e7e11cb39c8515c4290251b63df9fa63,
+        type: 2}
+      propertyPath: scoreManager
+      value: 
+      objectReference: {fileID: 1876821269}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e7e11cb39c8515c4290251b63df9fa63, type: 2}
   m_IsPrefabParent: 0
