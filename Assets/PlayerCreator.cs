@@ -15,7 +15,7 @@ public class PlayerCreator : MonoBehaviour {
     private bool player4;
 
     private int nombreDeGamepad;
-    private int numberOfPlayer;
+    public int numberOfPlayer;
     public GameObject playerObject;
     private GamepadManager manager;
     
@@ -32,7 +32,7 @@ public class PlayerCreator : MonoBehaviour {
 
         // Update is called once per frame
         void Update () {
-        
+        //Debug.Log(numberOfPlayer);
         nombreDeGamepad = manager.ConnectedTotal();
 
 
@@ -42,14 +42,18 @@ public class PlayerCreator : MonoBehaviour {
                 == false)
             {
                 player1 = true;
-                CreatePlayer(1, playerObject);
+                numberOfPlayer += 1;
+                CreatePlayer(numberOfPlayer, playerObject);
+                //numberOfPlayer = 1;
             }
             if (nombreDeGamepad >= 2)
             {
                 if (gamepad2.GetButtonDown("A") && player2 == false)
                 {
                     player2 = true;
-                    CreatePlayer(2, playerObject);
+                    numberOfPlayer += 1;
+                    CreatePlayer(numberOfPlayer, playerObject);
+                    
                 }
             }
             if (nombreDeGamepad >= 3)
@@ -57,7 +61,8 @@ public class PlayerCreator : MonoBehaviour {
                 if (gamepad3.GetButtonDown("A") && player3 == false)
                 {
                     player3 = true;
-                    CreatePlayer(3, playerObject);
+                    numberOfPlayer += 1;
+                    CreatePlayer(numberOfPlayer, playerObject);
                 }
             }
             if (nombreDeGamepad >= 4)
@@ -65,7 +70,8 @@ public class PlayerCreator : MonoBehaviour {
                 if (gamepad4.GetButtonDown("A") && player4 == false)
                 {
                     player4 = true;
-                    CreatePlayer(4, playerObject);
+                    numberOfPlayer += 1;
+                    CreatePlayer(numberOfPlayer, playerObject);
                 }
             }
         }
@@ -90,7 +96,7 @@ public class PlayerCreator : MonoBehaviour {
     {
         GameObject _Player;
         _Player = Instantiate(modele, transform.position, transform.rotation) as GameObject;
-        numberOfPlayer += 1;
+        //numberOfPlayer += 1;
         _Player.GetComponent<BounceController>().papa = createur;
        
 

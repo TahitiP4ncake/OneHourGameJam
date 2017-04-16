@@ -304,11 +304,11 @@ MonoBehaviour:
   maxSpeed: 10
   downSpeed: 10
   onTheWall: 0
-  dashSpeed: 25
-  dashDuration: 0.2
+  dashSpeed: 35
+  dashDuration: 0.1
   dashCooldown: 0.1
   detectionRange: 1
-  bounceIntensity: 10
+  bounceIntensity: 12.5
   gravityForce: 0
   gravityTimer: 1
   bouncePlayerForce: 4
@@ -318,6 +318,7 @@ MonoBehaviour:
   score2: 0
   score3: 0
   score4: 0
+  scoreManager: {fileID: 0}
 --- !u!135 &135103762362526434
 SphereCollider:
   m_ObjectHideFlags: 1

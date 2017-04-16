@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BounceController : MonoBehaviour {
     //gamepad
@@ -24,6 +25,7 @@ public class BounceController : MonoBehaviour {
     [Space]
     [Header("parametres dash")]
     //bounce properties
+    private float relativeSpeed;
     public float detectionRange;
     private bool checkCollision;
     private Vector3 bounceDirection;
@@ -46,15 +48,32 @@ public class BounceController : MonoBehaviour {
     public int score2;
     public int score3;
     public int score4;
-
+    public Score scoreManager;
     void Start () {
         manager = GamepadManager.Instance;
         gamepad = manager.GetGamepad(papa);
         rb = GetComponent<Rigidbody>();
-
+        scoreManager = Score.Instance;
+       
         //GetComponentInChildren<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
         //renderer.material.SetColor("_ToonShade",myColor);
         colorChanger.GetComponent<Renderer>().material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
+        if (papa == 1)
+        {
+            scoreManager.score1 = 0;
+        }
+        if (papa == 2)
+        {
+            scoreManager.score2 =0;
+        }
+        if (papa == 3)
+        {
+            scoreManager.score3 =0;
+        }
+        if (papa == 4)
+        {
+            scoreManager.score4 =0;
+        }
     }
 
 
@@ -63,10 +82,12 @@ public class BounceController : MonoBehaviour {
         //Debug.Log(gamepad.GetStick_L().Y);
 		if(((gamepad.GetStick_L().X)>0.2f || (gamepad.GetStick_L().X) <-0.2f))
         {
+            
             //&& rb.velocity.x<maxSpeed
             Move();
         }
-
+        
+        
         if(gamepad.GetButtonDown("A") && !dashOn)
         {
             dashOn = true;
@@ -75,6 +96,19 @@ public class BounceController : MonoBehaviour {
         if(gamepad.GetStick_L().Y!=0 && onTheWall)
         {
             moveDown();
+        }
+        if(gamepad.GetButton("X"))
+        {
+            Stop();
+        }
+        if(gamepad.GetButton("Start"))
+        {
+            Scene scene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(scene.name);
+        }
+        if(gamepad.GetButtonDown("Y"))
+        {
+            colorChanger.GetComponent<Renderer>().material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
         }
         
 	}
@@ -143,6 +177,10 @@ public class BounceController : MonoBehaviour {
         rb.AddForce(Vector3.right * speed * gamepad.GetStick_L().X, ForceMode.Acceleration);
     }
     
+    void Stop()
+    {
+        rb.velocity = rb.velocity / 10;
+    }
     void moveDown()
     {
         rb.AddForce(Vector3.up * gamepad.GetStick_L().Y * downSpeed , ForceMode.Acceleration);
@@ -152,6 +190,7 @@ public class BounceController : MonoBehaviour {
     {
         StopCoroutine(DashTimer());
         dashOn = false;
+        //direction.y = direction.y + relativeSpeed;
         rb.AddForce(direction*bounceIntensity, ForceMode.VelocityChange);       
     }
 
@@ -159,7 +198,8 @@ public class BounceController : MonoBehaviour {
     {
         if (other.collider.tag == "Player" && !isAttacking)
         {
-            Bounce((transform.position - other.transform.position)/bouncePlayerForce);
+            
+            Bounce(((transform.position - other.transform.position)/bouncePlayerForce));
             //Debug.Log("touché");
         }
         if (other.collider.tag == "Player" && isAttacking)
@@ -167,6 +207,7 @@ public class BounceController : MonoBehaviour {
 
             // Destroy(other.gameObject);
             other.gameObject.tag = "Respawn";
+            AddPoint();
            
             //other.gameObject.SetActive(false);
 
@@ -174,6 +215,7 @@ public class BounceController : MonoBehaviour {
         }
         {
             checkCollision = true;
+            relativeSpeed = other.relativeVelocity.y/10;
         }
         
     }
@@ -205,21 +247,35 @@ public class BounceController : MonoBehaviour {
         
     }
 
+    void AddPoint()
+    {
+        if (papa == 1)
+        {
+            scoreManager.score1 += 1;
+        }
+        if (papa == 2)
+        {
+            scoreManager.score2 += 1;
+        }
+        if (papa == 3)
+        {
+            scoreManager.score3 += 1;
+        }
+        if (papa == 4)
+        {
+            scoreManager.score4 += 1;
+        }
+    }
+
     IEnumerator DashTimer()
     {
         Vector3 _velocity = Vector3.zero;
-        //float velocityScale = 1;
         Dash();
+       
         isAttacking = true;
         yield return new WaitForSecondsRealtime(dashDuration);
         isAttacking = false;
-        //rb.velocity = rb.velocity / 4;
-        //_velocity = rb.velocity;
         rb.velocity = rb.velocity / 4;
-
-
-        //yield return new WaitForSecondsRealtime(dashDuration);
-        //rb.velocity = _velocity/4;
         yield return new WaitForSecondsRealtime(dashCooldown);
         dashOn = false;
     }
@@ -228,6 +284,5 @@ public class BounceController : MonoBehaviour {
     {
         yield return new WaitForSecondsRealtime(gravityTimer);
          rb.AddForce(Vector3.down * gravityForce, ForceMode.VelocityChange);
-        
     }
 }
