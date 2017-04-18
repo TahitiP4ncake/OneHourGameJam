@@ -8,6 +8,7 @@ TagManager:
   - blue
   - yellow
   - green
+  - particule
   layers:
   - Default
   - TransparentFX

@@ -49,12 +49,21 @@ public class BounceController : MonoBehaviour {
     public int score3;
     public int score4;
     public Score scoreManager;
+
+    //Effect
+    private Camera view;
+    private bool isSlow;
+    public int children=5;
+    public GameObject particules;
+    private Vector3 deadDirection;
+
     void Start () {
         manager = GamepadManager.Instance;
         gamepad = manager.GetGamepad(papa);
         rb = GetComponent<Rigidbody>();
         scoreManager = Score.Instance;
-       
+        view = Camera.main;
+
         //GetComponentInChildren<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
         //renderer.material.SetColor("_ToonShade",myColor);
         colorChanger.GetComponent<Renderer>().material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
@@ -75,7 +84,7 @@ public class BounceController : MonoBehaviour {
             scoreManager.score4 =0;
         }
     }
-
+   
 
     void Update () {
         
@@ -115,11 +124,13 @@ public class BounceController : MonoBehaviour {
 
     void FixedUpdate()
     {
+        /*
         if (gamepad.GetStick_L().Y == 0 && onTheWall)
         {
             rb.AddForce(Vector3.down * gravityForce, ForceMode.Acceleration);
             rb.velocity = rb.velocity / 2;
         }
+        */
         /*
         if (onTheWall)
         {
@@ -136,41 +147,55 @@ public class BounceController : MonoBehaviour {
             if (Physics.Raycast(transform.position, Vector3.down, detectionRange))
             {
                 Bounce(Vector3.up);
-                //Debug.Log("en bas");
+                Debug.Log("en bas");
             }
 
             if (Physics.Raycast(transform.position, Vector3.up, detectionRange))
             {
                 Bounce(Vector3.down);
-                //Debug.Log("en haut");
+                Debug.Log("en haut");
+            }
+            if (Physics.Raycast(transform.position, Vector3.right, detectionRange))
+            {
+                Debug.Log("a droite");
+                Bounce(Vector3.left);
+            }
+            if (Physics.Raycast(transform.position, Vector3.left, detectionRange))
+            {
+                Debug.Log("a gauche");
+                Bounce(Vector3.right);
             }
         }
-        if(checkSide)
-        {
-            checkSide = false;
-        if (Physics.Raycast(transform.position, Vector3.right, detectionRange))
-        {
-            onTheWall = true;
 
-            // Bounce(Vector3.left);
-            //Debug.Log("a droite");
-        }
+                /*
+                if(checkSide)
+                {
+                    checkSide = false;
+                if (Physics.Raycast(transform.position, Vector3.right, detectionRange))
+                {
+                    onTheWall = true;
 
-        if (Physics.Raycast(transform.position, Vector3.left, detectionRange))
-        {
-            onTheWall = true;
+                    // Bounce(Vector3.left);
+                    //Debug.Log("a droite");
+                }
 
-            //Bounce(Vector3.right);
-            //Debug.Log("a gauche");
-        }
+                if (Physics.Raycast(transform.position, Vector3.left, detectionRange))
+                {
+                    onTheWall = true;
 
-    }
-        if(onTheWall)
-        {
-            rb.useGravity = false;
-        }
-        
-    }
+                    //Bounce(Vector3.right);
+                    //Debug.Log("a gauche");
+                }
+
+
+            }
+
+                if (onTheWall)
+                {
+                    rb.useGravity = false;
+                }
+                */
+            }
 
     void Move()
     {
@@ -191,7 +216,8 @@ public class BounceController : MonoBehaviour {
         StopCoroutine(DashTimer());
         dashOn = false;
         //direction.y = direction.y + relativeSpeed;
-        rb.AddForce(direction*bounceIntensity, ForceMode.VelocityChange);       
+        rb.AddForce(direction*bounceIntensity, ForceMode.VelocityChange);
+        Debug.Log("bounce");
     }
 
     void OnCollisionEnter(Collision other)
@@ -204,9 +230,15 @@ public class BounceController : MonoBehaviour {
         }
         if (other.collider.tag == "Player" && isAttacking && other.gameObject.GetComponentInParent<BounceController>().isAttacking==false)
         {
-
+            //Explosion(deadDirection);
             // Destroy(other.gameObject);
+            deadDirection = (transform.position - other.transform.position);
+            other.gameObject.GetComponent<BounceController>().Explosion(other.gameObject,GetComponent<Rigidbody>().velocity);
+            StartCoroutine(Slow());
+            StartCoroutine(view.GetComponent<cameraEffect>().Shake());
+            
             other.gameObject.tag = "Respawn";
+            
             AddPoint();
            
             //other.gameObject.SetActive(false);
@@ -218,9 +250,11 @@ public class BounceController : MonoBehaviour {
             Bounce(((transform.position - other.transform.position) / bouncePlayerForce));
 
         }
+        
         {
             checkCollision = true;
-            relativeSpeed = other.relativeVelocity.y/10;
+            Debug.Log("mur");
+            //relativeSpeed = other.relativeVelocity.y/10;
         }
         
     }
@@ -228,21 +262,24 @@ public class BounceController : MonoBehaviour {
     void OnCollisionStay(Collision other)
     {
         
-        
+       
         if(other.collider.tag !="Player")
         {
-            checkSide = true;
+            checkCollision = true;
         }
+        
         
     }
 
     void OnCollisionExit(Collision other)
     {
+        /*
         if(onTheWall)
         {
             onTheWall = false;
             rb.useGravity = true;
         }
+        */
     }
 
     void Dash()
@@ -277,6 +314,37 @@ public class BounceController : MonoBehaviour {
         }
     }
 
+    void Explosion(GameObject otherPlayer,Vector3 direction)
+    {
+        Vector3 _spawn = transform.position;
+        int _children = children + (Random.Range(1, 20));
+        Debug.Log(_children);
+        for(int i=0; i<_children; i++)
+        {
+            //Debug.Log("particules");
+
+            Vector3 _direction = direction;
+            _direction.x = direction.x + (Random.Range(-10f, 10f));
+
+            Vector3 rndPosWithin;
+            rndPosWithin = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+            rndPosWithin = otherPlayer.transform.TransformPoint(rndPosWithin * .5f);
+
+            GameObject _part = Instantiate(particules, rndPosWithin, transform.rotation);
+            
+            _part.GetComponent<Renderer>().material.SetColor("_Color", colorChanger.GetComponent<Renderer>().material.color);
+            _part.tag = "particule";
+            float _scale = Random.Range(0.1f, 0.6f);
+            _part.transform.localScale =new Vector3 (_scale, _scale, _scale);
+
+            _part.GetComponent<Rigidbody>().AddForce(_direction *(Random.Range(.02f,0.5f)), ForceMode.VelocityChange);
+            //GetComponent<Renderer>().material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
+            StartCoroutine(particuleEnd(_part));
+        }
+
+
+    }
+
     IEnumerator DashTimer()
     {
         Vector3 _velocity = Vector3.zero;
@@ -294,5 +362,22 @@ public class BounceController : MonoBehaviour {
     {
         yield return new WaitForSecondsRealtime(gravityTimer);
          rb.AddForce(Vector3.down * gravityForce, ForceMode.VelocityChange);
+    }
+    
+    IEnumerator Slow()
+    {
+        Time.timeScale = 0.1f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        yield return new WaitForSecondsRealtime(.2f);
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 0.02f;
+        
+    }
+
+    IEnumerator particuleEnd(GameObject particules)
+    {
+        yield return new WaitForSecondsRealtime(5f);
+        
+            GameObject.Destroy(particules);
     }
 }
