@@ -202,7 +202,7 @@ public class BounceController : MonoBehaviour {
             Bounce(((transform.position - other.transform.position)/bouncePlayerForce));
             //Debug.Log("touché");
         }
-        if (other.collider.tag == "Player" && isAttacking)
+        if (other.collider.tag == "Player" && isAttacking && other.gameObject.GetComponentInParent<BounceController>().isAttacking==false)
         {
 
             // Destroy(other.gameObject);
@@ -212,6 +212,11 @@ public class BounceController : MonoBehaviour {
             //other.gameObject.SetActive(false);
 
             //Debug.Log("touché");
+        }
+        if (other.collider.tag == "Player" && isAttacking && other.gameObject.GetComponentInParent<BounceController>().isAttacking)
+        {
+            Bounce(((transform.position - other.transform.position) / bouncePlayerForce));
+
         }
         {
             checkCollision = true;
@@ -242,9 +247,14 @@ public class BounceController : MonoBehaviour {
 
     void Dash()
     {
-        
-        rb.AddForce(new Vector3(gamepad.GetStick_L().X, gamepad.GetStick_L().Y, 0) * dashSpeed, ForceMode.VelocityChange);
-        
+        if (gamepad.GetStick_L().X == 0 && gamepad.GetStick_L().Y == 0)
+        {
+            rb.AddForce(new Vector3(0,.5f, 0) * dashSpeed, ForceMode.VelocityChange);
+        }
+        else
+        {
+            rb.AddForce(new Vector3(gamepad.GetStick_L().X, gamepad.GetStick_L().Y, 0) * dashSpeed, ForceMode.VelocityChange);
+        }
     }
 
     void AddPoint()
@@ -275,7 +285,7 @@ public class BounceController : MonoBehaviour {
         isAttacking = true;
         yield return new WaitForSecondsRealtime(dashDuration);
         isAttacking = false;
-        rb.velocity = rb.velocity / 4;
+        rb.velocity = rb.velocity / 10;
         yield return new WaitForSecondsRealtime(dashCooldown);
         dashOn = false;
     }
