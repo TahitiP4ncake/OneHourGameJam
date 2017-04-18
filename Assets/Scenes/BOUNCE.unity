@@ -448,11 +448,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 114589068424690308, guid: 4de46960324ab0a4bb4bc56b9ea1ea69,
-        type: 2}
-      propertyPath: scoreManager
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 1210911155511950, guid: 4de46960324ab0a4bb4bc56b9ea1ea69, type: 2}
       propertyPath: m_IsActive
       value: 0
@@ -778,7 +773,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: e9ba2083ad114a07d000fbfb8d76c639, type: 3}
-  blurAmount: 0.92
+  blurAmount: 0.2
   extraBlur: 1
 --- !u!1 &1182405312
 GameObject:
