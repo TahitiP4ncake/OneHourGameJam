@@ -55,6 +55,8 @@ MonoBehaviour:
   score2: 0
   score3: 0
   score4: 0
+  death: 0
+  lose: 0
   spawner: {fileID: 0}
   respawns: []
   players: []
